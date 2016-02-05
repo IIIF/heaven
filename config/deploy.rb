@@ -2,13 +2,13 @@
 lock '3.4.0'
 
 set :application, 'appdeploy'
-set :repo_url, 'git@github.com:pulibrary/heaven.git'
+set :repo_url, 'https://github.com/iiif/heaven.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/opt/appdeploy'
+set :deploy_to, '/data/appdeploy'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -50,18 +50,11 @@ namespace :deploy do
   end
 
 end
-namespace :resque do
-  task :quiet do
-    on roles(:app) do
-      # Horrible hack to get PID without having to use terrible PID files
-      puts capture("kill -USR1 $(sudo initctl status appdeploy-workers | grep /running | awk '{print $NF}') || :")
-    end
-  end
-  task :restart do
-    on roles(:app) do
-      execute :sudo, :initctl, :restart, "appdeploy-workers"
-    end
-  end
-end
+
+role :resque_worker,    "iiif.io"
+role :resque_scheduler, "iiif.io"
+set :workers, { ENV["QUEUE"] => 2 }
+
+after 'deploy:restart', 'resque:restart'
 after 'deploy:reverted', 'resque:restart'
 after 'deploy:published', 'resque:restart'

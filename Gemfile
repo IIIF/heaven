@@ -18,6 +18,7 @@ gem "capistrano"
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-passenger'
 gem 'capistrano-rails-console'
+gem "capistrano-resque", "~> 0.2.2", require: false
 
 # Notifiers
 gem "hipchat"
