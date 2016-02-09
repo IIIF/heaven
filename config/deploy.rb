@@ -33,7 +33,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
-# set :keep_releases, 5
+set :keep_releases, 3
 
 # Restart Passenger with touch.
 set :passenger_restart_with_touch, true
@@ -53,7 +53,7 @@ end
 
 role :resque_worker,    "iiif.io"
 role :resque_scheduler, "iiif.io"
-set :workers, { ENV["QUEUE"] => 2 }
+set :workers, { "heaven" => 2 }
 
 after 'deploy:restart', 'resque:restart'
 after 'deploy:reverted', 'resque:restart'
