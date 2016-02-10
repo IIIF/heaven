@@ -53,7 +53,7 @@ end
 
 role :resque_worker,    "iiif.io"
 role :resque_scheduler, "iiif.io"
-set :workers, { "heaven" => 2 }
+set :workers, { "events" => 1, "failed" => 1 }
 
 after 'deploy:restart', 'resque:restart'
 after 'deploy:reverted', 'resque:restart'
